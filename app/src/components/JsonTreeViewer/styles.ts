@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const JSONTreeViewerContainer = styled.div`
+export const JsonTreeViewerContainer = styled.div`
   min-width: 638px;
   padding-bottom: 24px;
 
@@ -14,7 +14,7 @@ export const JSONTreeViewerContainer = styled.div`
   }
 `
 
-export const Filename = styled.h2`
+export const Title = styled.h2`
   color: #000;
   font-size: 32px;
   font-style: normal;
@@ -26,7 +26,7 @@ export const Filename = styled.h2`
 
 export const UnorderedList = styled.ul`
   border-left: 1px solid #BFBFBF;
-  margin-left: 4px;
+  margin-left: 2px;
 `
 
 export const ListItem = styled.li`
@@ -47,12 +47,16 @@ export const Key = styled.span`
   line-height: 28.244px;
 `
 
-export const Brackets = styled.span`
+export const SquareBrackets = styled.span<{ $isopen?: boolean }>`
   color: #F2CAB8;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 28.244px;
+
+  &:before {
+    content: "${props => (props.$isopen ? '[' : ']')}";
+  }
 `
 
 export const ArrayIndex = styled.span`

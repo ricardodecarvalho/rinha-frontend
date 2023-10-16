@@ -1,12 +1,21 @@
 import React, { useRef } from "react";
 
 import { StyledButton, StyledInput } from "./styles";
+import { bytesToMB } from "../../utils";
 
-type Props = {
-  onClick: (file: File) => void
+type FileUploaderProps = {
+  onFileSelected: (file: File) => void
+  maxFileSize?: number;
+  accept?: string;
 }
 
-const JSONUploader = ({ onClick }: Props) => {
+const MAX_FILE_SIZE = 1048576;
+
+export const FileUploader = ({
+  onFileSelected,
+  maxFileSize = MAX_FILE_SIZE,
+  accept
+}: FileUploaderProps) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -18,8 +27,14 @@ const JSONUploader = ({ onClick }: Props) => {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
     if (!file) return
-    if (file.size > 2000) return alert('File size is too big. Please upload a file smaller than 1MB.')
-    onClick(file)
+    if (file.size > maxFileSize) {
+      alert(
+        `File size is too big. Please upload a file smaller than ${bytesToMB(maxFileSize)}MB.
+        `
+      )
+      return
+    }
+    onFileSelected(file)
   }
 
   return (
@@ -34,10 +49,8 @@ const JSONUploader = ({ onClick }: Props) => {
         type="file"
         onChange={handleFileUpload}
         ref={hiddenFileInput}
-        accept="application/JSON"
+        accept={accept}
       />
     </>
   )
 }
-
-export default JSONUploader

@@ -6,13 +6,13 @@ import {
   Title,
   ErrorMessage
 } from "./styles"
-import JSONUploader from "./components/JSONUploader/JSONUploader";
-import { JSONValue } from "./types";
-import JSONTreeViewer from "./components/JSONTreeViewer/JSONTreeViewer";
+import { FileUploader } from "./components/FileUploader/FileUploader";
+import { JsonValue } from "./components/JsonTreeViewer/types";
+import { JsonTreeViewer } from "./components/JsonTreeViewer/JsonTreeViewer";
 import { Loader } from "./components/Loader/styles";
 
 const App = () => {
-  const [json, setJSON] = useState<JSONValue>(null);
+  const [json, setJSON] = useState<JsonValue>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filename, setFilename] = useState<string>('');
@@ -27,7 +27,7 @@ const App = () => {
     fileReader.onload = (e) => {
       try {
         const jsonString: string = e.target?.result as string;
-        const jsonParser: JSONValue = JSON.parse(jsonString);
+        const jsonParser: JsonValue = JSON.parse(jsonString);
         setJSON(jsonParser);
         setError('')
       } catch (error) {
@@ -49,7 +49,10 @@ const App = () => {
         Simple JSON Viewer that runs completely on-client. No data exchange.
       </Description>
 
-      <JSONUploader onClick={handleFileUploaded} />
+      <FileUploader
+        onFileSelected={handleFileUploaded}
+        accept="application/JSON"
+      />
 
       {error && (
         <ErrorMessage>{error}</ErrorMessage>
@@ -58,7 +61,10 @@ const App = () => {
       {loading && <Loader />}
 
       {!loading && json && (
-        <JSONTreeViewer data={json} {...{filename}} />
+        <JsonTreeViewer
+          data={json}
+          title={filename}
+        />
       )}
     </Container>
   )
